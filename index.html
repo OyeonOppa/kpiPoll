@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ศูนย์สำรวจความคิดเห็นสถาบันพระปกเกล้า">
+    <title>KPI POLL - ศูนย์สำรวจความคิดเห็นสถาบันพระปกเกล้า</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <p>กำลังโหลดข้อมูล...</p>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="กลับขึ้นด้านบน">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <!-- Header Banner -->
+    <header class="header">
+        <!-- Banner Image -->
+        <div class="header-banner">
+            <img src="https://kpi.ac.th/wp-content/uploads/2025/11/top-banner-1.webp" 
+                 alt="KPI Poll Banner" 
+                 class="banner-image"
+                 onload="this.style.opacity=1"
+                 onerror="this.src='https://via.placeholder.com/1920x400/26513C/ffffff?text=KPI+POLL'">
+            <div class="banner-overlay">
+                <div class="container">
+                    <div class="banner-content" data-aos="fade-up">
+                        <div class="banner-logo">
+   
+</div>
+                        <h1 class="banner-title">KPI POLL</h1>
+                        <p class="banner-subtitle">ศูนย์สำรวจความคิดเห็นสถาบันพระปกเกล้า</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Bar -->
+        <div class="header-nav">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo-small">
+                        <svg class="logo-icon" width="35" height="35" viewBox="0 0 40 40" fill="none">
+                            <rect width="40" height="40" rx="8" fill="currentColor" opacity="0.2"/>
+                            <path d="M20 10 L30 20 L20 30 L10 20 Z" fill="currentColor"/>
+                        </svg>
+                        <span>KPI POLL</span>
+                    </div>
+                    <nav class="main-nav">
+                        <a href="#" class="nav-link active" data-page="home">หน้าแรก</a>
+                        <a href="#" class="nav-link" data-page="results">ผลสำรวจ</a>
+                        <a href="#" class="nav-link" data-page="insights">บทวิเคราะห์</a>
+                        <a href="#" class="nav-link" data-page="news">ข่าวสาร</a>
+                        <a href="#" class="nav-link" data-page="about">เกี่ยวกับเรา</a>
+                    </nav>
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="เมนู">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section 
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content" data-aos="fade-up">
+                <h2>ข้อมูลสำรวจที่เชื่อถือได้</h2>
+                <p>วิเคราะห์เชิงลึก ข้อมูลครบถ้วน รายงานผลแบบโปร่งใส</p>
+                <div class="hero-stats">
+                    <div class="hero-stat-item">
+                        <span class="stat-number" data-count="247">0</span>
+                        <span class="stat-label">โพลทั้งหมด</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="stat-number" data-count="523847">0</span>
+                        <span class="stat-label">ผู้เข้าร่วม</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="stat-number" data-count="15">0</span>
+                        <span class="stat-label">ปีที่ดำเนินการ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+-->
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- หน้าแรก -->
+            <div id="home" class="page active">
+                
+                <!-- Latest Poll -->
+                <section class="section" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2 class="section-title">ผลสำรวจล่าสุด</h2>
+                        <div class="section-line"></div>
+                    </div>
+                    
+                    <div class="latest-poll">
+                        <div class="poll-card featured">
+                            <div class="poll-header">
+                                <span class="badge badge-new">ใหม่</span>
+                                <span class="poll-id">Poll #2024-047</span>
+                            </div>
+                            
+                            <div class="poll-meta-top">
+                                <span class="poll-date">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    วันที่ 25 พฤศจิกายน 2567
+                                </span>
+                            </div>
+                            
+                            <h3 class="poll-title">ความคิดเห็นต่อนโยบายเศรษฐกิจดิจิทัลวอลเล็ต</h3>
+                            <p class="poll-description">สำรวจความคิดเห็นของประชาชนทั่วประเทศ จำนวน 2,156 คน เกี่ยวกับนโยบายเศรษฐกิจดิจิทัลวอลเล็ต โดยครอบคลุมทุกกลุ่มอายุ ระดับการศึกษา และภูมิภาคทั่วประเทศ</p>
+                            
+                            <div class="poll-stats">
+                                <div class="stat-item">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                    <div>
+                                        <span class="stat-number">2,156</span>
+                                        <span class="stat-label">ผู้ตอบแบบสำรวจ</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    <div>
+                                        <span class="stat-number">24-25 พ.ย.</span>
+                                        <span class="stat-label">ระยะเวลาสำรวจ</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                    </svg>
+                                    <div>
+                                        <span class="stat-number">±2.13%</span>
+                                        <span class="stat-label">ค่าคลาดเคลื่อน</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="poll-results">
+                                <div class="result-bar">
+                                    <div class="result-label">
+                                        <span class="result-text">เห็นด้วย</span>
+                                        <span class="result-percent">54.3%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" data-progress="54.3" style="width: 0%; background: #27ae60;"></div>
+                                    </div>
+                                </div>
+                                <div class="result-bar">
+                                    <div class="result-label">
+                                        <span class="result-text">ไม่เห็นด้วย</span>
+                                        <span class="result-percent">28.7%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" data-progress="28.7" style="width: 0%; background: #e74c3c;"></div>
+                                    </div>
+                                </div>
+                                <div class="result-bar">
+                                    <div class="result-label">
+                                        <span class="result-text">ไม่แน่ใจ</span>
+                                        <span class="result-percent">17.0%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" data-progress="17" style="width: 0%; background: #95a5a6;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="showPollDetail()">
+                                <span>อ่านรายงานฉบับเต็ม</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recent Polls -->
+                <section class="section" data-aos="fade-up" data-aos-delay="100">
+                    <div class="section-header">
+                        <h2 class="section-title">ผลสำรวจอื่นๆ</h2>
+                        <div class="section-line"></div>
+                    </div>
+                    <div class="polls-grid" id="recentPolls">
+                        <!-- จะถูกสร้างด้วย JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Trust Indicators -->
+                <section class="section trust-section" data-aos="fade-up" data-aos-delay="200">
+                    <div class="section-header">
+                        <h2 class="section-title">มาตรฐานและความน่าเชื่อถือ</h2>
+                        <div class="section-line"></div>
+                    </div>
+                    <div class="trust-grid">
+                        <div class="trust-card">
+                            <div class="trust-icon">✓</div>
+                            <h3>โปร่งใส</h3>
+                            <p>เปิดเผยวิธีการสำรวจและแหล่งที่มาของข้อมูลอย่างชัดเจน</p>
+                        </div>
+                        <div class="trust-card">
+                            <div class="trust-icon">⚖️</div>
+                            <h3>เป็นกลาง</h3>
+                            <p>ไม่มีส่วนได้ส่วนเสีย รายงานผลตามข้อเท็จจริงเท่านั้น</p>
+                        </div>
+                        <div class="trust-card">
+                            <div class="trust-icon">🎓</div>
+                            <h3>เชิงวิชาการ</h3>
+                            <p>ใช้วิธีการทางสถิติที่ได้มาตรฐานสากล</p>
+                        </div>
+                        <div class="trust-card">
+                            <div class="trust-icon">🔒</div>
+                            <h3>ปกป้องข้อมูล</h3>
+                            <p>รักษาความลับของผู้ตอบแบบสำรวจอย่างเคร่งครัด</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- หน้าผลสำรวจ -->
+            <div id="results" class="page">
+                <section class="section" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2 class="section-title">ผลสำรวจทั้งหมด</h2>
+                        <div class="section-line"></div>
+                    </div>
+                    
+                    <!-- Filter -->
+                    <div class="filter-bar">
+                        <div class="filter-group">
+                            <label for="yearFilter">ปี</label>
+                            <select id="yearFilter" class="filter-select">
+                                <option value="all">ทุกปี</option>
+                                <option value="2567" selected>2567</option>
+                                <option value="2566">2566</option>
+                                <option value="2565">2565</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="categoryFilter">หมวดหมู่</label>
+                            <select id="categoryFilter" class="filter-select">
+                                <option value="all">ทุกหมวดหมู่</option>
+                                <option value="politics">การเมือง</option>
+                                <option value="economy">เศรษฐกิจ</option>
+                                <option value="social">สังคม</option>
+                                <option value="education">การศึกษา</option>
+                            </select>
+                        </div>
+                        <div class="filter-group search-group">
+                            <label for="searchPoll">ค้นหา</label>
+                            <div class="search-wrapper">
+                                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                                <input type="text" id="searchPoll" class="search-input" placeholder="ค้นหาผลสำรวจ...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="polls-list" id="allPolls">
+                        <!-- จะถูกสร้างด้วย JavaScript -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- หน้าบทวิเคราะห์ -->
+            <div id="insights" class="page">
+                <section class="section" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2 class="section-title">บทวิเคราะห์ผลโพล</h2>
+                        <div class="section-line"></div>
+                    </div>
+                    <div class="insights-grid" id="insightsList">
+                        <!-- จะถูกสร้างด้วย JavaScript -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- หน้าข่าวสาร -->
+            <div id="news" class="page">
+                <section class="section" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2 class="section-title">ข่าวสาร</h2>
+                        <div class="section-line"></div>
+                    </div>
+                    <div class="news-list" id="newsList">
+                        <!-- จะถูกสร้างด้วย JavaScript -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- หน้าเกี่ยวกับเรา -->
+            <div id="about" class="page">
+                <section class="section" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2 class="section-title">เกี่ยวกับเรา</h2>
+                        <div class="section-line"></div>
+                    </div>
+                    
+                    <div class="about-content">
+                        <div class="about-card" data-aos="fade-up" data-aos-delay="100">
+                            <div class="about-icon">🎯</div>
+                            <h3>พันธกิจ</h3>
+                            <p>สถาบันสำรวจความคิดเห็นที่มุ่งมั่นนำเสนอข้อมูลเชิงวิชาการที่เป็นกลาง โปร่งใส และเชื่อถือได้ เพื่อเป็นฐานข้อมูลสำคัญในการตัดสินใจของสังคมไทย</p>
+                        </div>
+
+                        <div class="about-card" data-aos="fade-up" data-aos-delay="200">
+                            <div class="about-icon">🔬</div>
+                            <h3>วิธีการสำรวจ</h3>
+                            <p>ใช้วิธีการสุ่มตัวอย่างแบบชั้นภูมิ (Stratified Random Sampling) จากประชากรทั่วประเทศ ครอบคลุมทุกภูมิภาค เพศ อายุ และระดับการศึกษา เพื่อให้ได้ตัวอย่างที่เป็นตัวแทนของประชากรไทยอย่างแท้จริง</p>
+                        </div>
+
+                        <div class="about-card" data-aos="fade-up" data-aos-delay="300">
+                            <div class="about-icon">✅</div>
+                            <h3>มาตรฐานการสำรวจ</h3>
+                            <ul>
+                                <li>ใช้แบบสอบถามที่ผ่านการทดสอบความเที่ยงตรง</li>
+                                <li>มีทีมผู้เชี่ยวชาญตรวจสอบคุณภาพข้อมูล</li>
+                                <li>รายงานผลแบบโปร่งใส พร้อมแสดงค่าความคลาดเคลื่อน</li>
+                                <li>เก็บข้อมูลด้วยวิธีการหลากหลาย (โทรศัพท์, ภาคสนาม, ออนไลน์)</li>
+                            </ul>
+                        </div>
+
+                        <div class="about-card" data-aos="fade-up" data-aos-delay="400">
+                            <div class="about-icon">📞</div>
+                            <h3>ติดต่อเรา</h3>
+                            <div class="contact-info">
+                                <p><strong>อีเมล:</strong> webmaster@kpi.ac.th</p>
+                                <p><strong>โทรศัพท์:</strong> 02-123-4567</p>
+                                <p><strong>ที่อยู่:</strong> ศูนย์ราชการเฉลิมพระเกียรติ 80 พรรษา 5 ธันวาคม 2550 อาคารรัฐประศาสนภักดี ชั้น 5 ฝั่งทิศใต้ เลขที่ 120 หมู่ 3 ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร 10210</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>KPI POLL</h4>
+                    <p>ศูนย์สำรวจความคิดเห็นสถาบันพระปกเกล้า</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Twitter">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Line">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>เมนูหลัก</h4>
+                    <a href="#" data-page="home">หน้าแรก</a>
+                    <a href="#" data-page="results">ผลสำรวจ</a>
+                    <a href="#" data-page="insights">บทวิเคราะห์</a>
+                    <a href="#" data-page="about">เกี่ยวกับเรา</a>
+                </div>
+                <div class="footer-section">
+                    <h4>ข้อมูลเพิ่มเติม</h4>
+                    <a href="#">นโยบายความเป็นส่วนตัว</a>
+                    <a href="#">ข้อกำหนดการใช้งาน</a>
+                    <a href="#">คำถามที่พบบ่อย</a>
+                    <a href="#">ติดต่อเรา</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 KPI POLL. All rights reserved. | Designed with สถาบันพระปกเกล้า</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

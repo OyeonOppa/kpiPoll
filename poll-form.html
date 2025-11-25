@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="แบบสำรวจความคิดเห็นด้านการเมืองและสังคม - สถาบันพระปกเกล้า">
+    <title>KPI Poll - ศูนย์สำรวจความคิดเห็นสถาบันพระปกเกล้า</title>
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="poll-form.css">
+</head>
+<body>
+    
+    <!-- Header -->
+    <header class="form-header">
+        <div class="container">
+            <div class="header-content">
+                <img src="https://www.kpi.ac.th/uploads/files/KPI_symbol.png" alt="KPI Logo" class="logo-img" onerror="this.style.display='none'">
+                <div class="header-text">
+                    <h1>KPI Poll - สถาบันพระปกเกล้า </h1>
+                    <p>ศูนย์สำรวจความคิดเห็นสถาบันพระปกเกล้า</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text">
+            <span id="progressText">ส่วนที่ 1/5</span>
+            <span id="progressPercent">0%</span>
+        </div>
+    </div>
+
+    <!-- Main Form -->
+    <main class="form-container">
+        <div class="container">
+            
+            <!-- Form Title -->
+            <div class="form-title-section">
+                <div class="badge-required">การเมืองและสังคม</div>
+                <h2 class="form-title">KPI Poll</h2>
+                <p class="form-subtitle">แบบสำรวจความคิดเห็นด้านการเมืองและสังคม</p>
+                <div class="form-description">
+                    <p>📋 กรุณาตอบคำถามตามความเป็นจริง</p>
+                    <p>⏱️ ใช้เวลาประมาณ 8-12 นาที</p>
+                    <p>🔒 ข้อมูลของท่านจะถูกเก็บเป็นความลับ</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form id="pollForm">
+                
+                <!-- ========== Set 1: ความเห็นต่อการทำงานของรัฐสภาและรัฐบาล ========== -->
+                <div class="form-section" data-section="1">
+                    <h3 class="section-title">
+                        <span class="section-number">1</span>
+                        ความเห็นต่อการทำงานของรัฐสภาและรัฐบาล
+                    </h3>
+
+                    <!-- Q1 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">1. ท่านเห็นว่า การเมืองไทยในภาพรวมตอนนี้ เป็นอย่างไร?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">กำลังดีขึ้น</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">เหมือน ๆ เดิม</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">กำลังแย่ลง</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">2. ท่านพอใจการทำงานของรัฐสภา ในภาพรวมเพียงใด?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">พอใจมากที่สุด</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ค่อนข้างพอใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่ค่อยพอใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="4" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่พอใจเลย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">3. ท่านพอใจการทำงานของคณะรัฐมนตรีชุดปัจจุบัน ในภาพรวมเพียงใด?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">พอใจมากที่สุด</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ค่อนข้างพอใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่ค่อยพอใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="4" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่พอใจเลย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">4. ท่านพอใจต่อการจัดการปัญหาสแกมเมอร์/อาชญากรรมออนไลน์ของรัฐบาล มากน้อยเพียงใด?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">พอใจมากที่สุด</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ค่อนข้างพอใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่ค่อยพอใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="4" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่พอใจเลย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">5. สิ่งที่ท่านอยากให้รัฐสภาพัฒนาการทำงานมากที่สุดคือเรื่องใด?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <select name="q5" class="form-select" required>
+                            <option value="">เลือกคำตอบ</option>
+                            <option value="1">ออกกฎหมายให้ดีขึ้น</option>
+                            <option value="2">ตรวจสอบรัฐบาลให้เข้มงวดขึ้น</option>
+                            <option value="3">เปิดโอกาสให้ประชาชนมีส่วนร่วมมากขึ้น</option>
+                            <option value="4">อภิปรายโดยใช้ข้อมูลจริงมากขึ้น</option>
+                            <option value="5">ทำงานโปร่งใส ตรวจสอบได้ง่ายขึ้น</option>
+                            <option value="6">กรรมาธิการทำงานให้มีประสิทธิภาพมากขึ้น</option>
+                            <option value="7">ลดความขัดแย้งในสภา ร่วมมือกันให้มากขึ้น</option>
+                            <option value="8">ใช้เทคโนโลยีสมัยใหม่ในการทำงานมากขึ้น</option>
+                            <option value="9">เรื่องอื่น</option>
+                            <option value="99">ไม่มีความคิดเห็น</option>
+                        </select>
+                    </div>
+
+                    <!-- Q5 - Other -->
+                    <div class="form-group" id="q5_other_group" style="display: none;">
+                        <label class="form-label">
+                            <span class="label-text">กรุณาระบุ (เรื่องอื่น)</span>
+                        </label>
+                        <input type="text" name="q5_other" class="form-input" placeholder="โปรดระบุ...">
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">6. หากมีการแก้ไขรัฐธรรมนูญ ท่านอยากให้แก้เรื่องใดเป็นเรื่องแรก?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <select name="q6" class="form-select" required>
+                            <option value="">เลือกคำตอบ</option>
+                            <option value="1">ระบบเลือกตั้ง</option>
+                            <option value="2">อำนาจของ สส.–สว.</option>
+                            <option value="3">วิธีการเลือกนายกรัฐมนตรี</option>
+                            <option value="4">สิทธิและเสรีภาพประชาชน</option>
+                            <option value="5">การกระจายอำนาจสู่ท้องถิ่น</option>
+                            <option value="6">การตรวจสอบและป้องกันการทุจริต</option>
+                            <option value="7">องค์กรอิสระ</option>
+                            <option value="8">การมีส่วนร่วมของประชาชน</option>
+                            <option value="9">เรื่องอื่น</option>
+                            <option value="10">ไม่ต้องการให้แก้รัฐธรรมนูญ</option>
+                            <option value="99">ไม่มีความคิดเห็น</option>
+                        </select>
+                    </div>
+
+                    <!-- Q6 - Other -->
+                    <div class="form-group" id="q6_other_group" style="display: none;">
+                        <label class="form-label">
+                            <span class="label-text">กรุณาระบุ (เรื่องอื่น)</span>
+                        </label>
+                        <input type="text" name="q6_other" class="form-input" placeholder="โปรดระบุ...">
+                    </div>
+                </div>
+
+                <!-- ========== Set 2: เลือกตั้ง 69: นายกใหม่ที่คนไทยอยากได้ ========== -->
+                <div class="form-section" data-section="2">
+                    <h3 class="section-title">
+                        <span class="section-number">2</span>
+                        เลือกตั้ง 69: นายกใหม่ที่คนไทยอยากได้
+                    </h3>
+
+                    <!-- Q7 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">7. การประกาศชื่อแคนดิเดตนายกล่วงหน้ามีผลต่อการตัดสินใจลงคะแนนของท่านหรือไม่?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q7" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">มีผลอย่างมาก</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q7" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ค่อนข้างมีผล</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q7" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่ค่อยมีผล</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q7" value="4" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีผลเลย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q7" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q8 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">8. ถ้าพรรคที่ท่านชอบเสนอชื่อแคนดิเดตนายกที่ท่านไม่ชอบ ท่านจะเปลี่ยนใจไปเลือกพรรคอื่นหรือไม่?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q8" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">เปลี่ยนแน่นอน</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q8" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">อาจจะเปลี่ยน</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q8" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่น่าจะเปลี่ยน</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q8" value="4" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่เปลี่ยนแน่นอน</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q8" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q9 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">9. คุณสมบัติที่สำคัญที่สุดของนายกรัฐมนตรีคนต่อไป?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <select name="q9" class="form-select" required>
+                            <option value="">เลือกคำตอบ</option>
+                            <option value="1">มีความซื่อตรง</option>
+                            <option value="2">แก้ปัญหาเศรษฐกิจปากท้องได้จริง</option>
+                            <option value="3">ยึดมั่นหลักประชาธิปไตย</option>
+                            <option value="4">แก้ปัญหาระหว่างประเทศได้ดี</option>
+                            <option value="5">มีวิสัยทัศน์</option>
+                            <option value="6">มีประสบการณ์บริหารราชการแผ่นดิน</option>
+                            <option value="7">คิดไว ตัดสินใจรวดเร็ว</option>
+                            <option value="8">สื่อสารชัดเจน</option>
+                            <option value="9">รับฟังเสียงประชาชน</option>
+                            <option value="99">ไม่มีความคิดเห็น</option>
+                        </select>
+                    </div>
+
+                    <!-- Q10 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">10. ท่านอยากให้นายกฯ คนใหม่ดำเนินนโยบายเร่งด่วนเรื่องใดเป็นอันดับแรก?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <select name="q10" class="form-select" required>
+                            <option value="">เลือกคำตอบ</option>
+                            <option value="1">ลดค่าครองชีพ</option>
+                            <option value="2">แก้ไขปัญหาหนี้ครัวเรือน</option>
+                            <option value="3">ปฏิรูประบบสุขภาพ</option>
+                            <option value="4">ปราบปรามทุจริตภาครัฐ</option>
+                            <option value="5">แก้ไขปัญหาชายแดนไทย-กัมพูชา</option>
+                            <option value="6">ปราบปรามสแกมเมอร์/อาชญากรรมออนไลน์</option>
+                            <option value="7">ปฏิรูปการศึกษา</option>
+                            <option value="8">แก้ปัญหายาเสพติด/ความปลอดภัยในสังคม</option>
+                            <option value="9">แก้ไขปัญหาสิ่งแวดล้อม</option>
+                            <option value="10">ปฏิรูปการเมืองทุกระดับ</option>
+                            <option value="99">ไม่มีความคิดเห็น</option>
+                        </select>
+                    </div>
+
+                    <!-- Q11 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">11. ท่านอยากฟังการดีเบต(อภิปราย/ปราศรัย)ของหัวหน้าพรรคคนใดมากที่สุด (ระบุได้ไม่เกิน 3 ข้อ)</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="1">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">นายจุลพันธ์ อมรวิวัฒน์ (เพื่อไทย)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="2">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">นายอนุทิน ชาญวีรกูล (ภูมิใจไทย)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="3">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">นายณัฐพงศ์ เรืองปัญญาวุฒิ (ประชาชน)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="4">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">นายอภิสิทธิ์ เวชชาชีวะ (ประชาธิปัตย์)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="5">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">นายพีรพันธ์ สาลีรัฐวิภาค (รวมไทยสร้างชาติ)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="6">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">คุณหญิงสุดารัตน์ เกยุราพันธ์ (ไทยสร้างไทย)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="7">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">พลเอกรังษี กิติญาณทรัพย์ (เศรษฐกิจ)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="8">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">ศ.ดร.สุชัชวีร์ สุวรรณสวัสดิ์ (ไทยก้าวใหม่)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="9">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">พันตำรวจเอกทวี สอดส่อง (ประชาชาติ)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="10">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">พลตำรวจเอกเสรีพิศุทธ์ เตมียเวส (เสรีรวมไทย)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="11">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">บุคคลอื่น</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q11[]" value="99">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">ไม่มีความคิดเห็น</span>
+                            </label>
+                        </div>
+                        <p class="help-text">เลือกได้สูงสุด 3 ข้อ</p>
+                    </div>
+
+                    <!-- Q11 - Other -->
+                    <div class="form-group" id="q11_other_group" style="display: none;">
+                        <label class="form-label">
+                            <span class="label-text">กรุณาระบุชื่อบุคคลอื่น</span>
+                        </label>
+                        <input type="text" name="q11_other" class="form-input" placeholder="โปรดระบุชื่อ...">
+                    </div>
+                </div>
+
+                <!-- ========== Set 3: การลงประชามติ MOU 43 และ 44 ========== -->
+                <div class="form-section" data-section="3">
+                    <h3 class="section-title">
+                        <span class="section-number">3</span>
+                        การลงประชามติ MOU 43 และ 44
+                    </h3>
+
+                    <!-- Q12 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">12. ท่านเข้าใจเกี่ยวกับ MOU 43 และ 44 มากน้อยเพียงใด?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q12" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">เข้าใจเป็นอย่างดี</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q12" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">พอจะเข้าใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q12" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่ค่อยเข้าใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q12" value="4" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่เข้าใจเลย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q12" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q13 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">13. ท่านคิดว่า การยกเลิก MOU 43 และ 44 จะช่วยแก้ปัญหาไทย-กัมพูชา ได้หรือไม่?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q13" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ได้</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q13" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่ได้</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q13" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่แน่ใจ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q13" value="4" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Q14 -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">14. ท่านเห็นด้วยหรือไม่ หากมีการจัดเลือกตั้ง สส. พร้อมกับลงประชามติ MOU 43 และ 44 วันเดียวกัน?</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q14" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">เห็นด้วยอย่างยิ่ง</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q14" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ค่อนข้างเห็นด้วย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q14" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่ค่อยเห็นด้วย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q14" value="4" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่เห็นด้วยเลย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q14" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่มีความเห็น</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== Set 4: ข้อมูลพื้นฐานของผู้ตอบ ========== -->
+                <div class="form-section" data-section="4">
+                    <h3 class="section-title">
+                        <span class="section-number">4</span>
+                        ข้อมูลพื้นฐานของผู้ตอบ
+                    </h3>
+
+                    <!-- เพศ -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">เพศ</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="1" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ชาย</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="2" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">หญิง</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="3" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ผู้มีความหลากหลายทางเพศ</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="99" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">ไม่ต้องการระบุ</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- อายุ -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">ช่วงอายุของผู้ตอบ</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <select name="age" class="form-select" required>
+                            <option value="">เลือกช่วงอายุ</option>
+                            <option value="1">18 – 25 ปี</option>
+                            <option value="2">26 – 35 ปี</option>
+                            <option value="3">36 - 45 ปี</option>
+                            <option value="4">46 – 55 ปี</option>
+                            <option value="5">56 ปีขึ้นไป</option>
+                        </select>
+                    </div>
+
+                    <!-- การศึกษา -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">ระดับการศึกษาสูงสุด</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <select name="education" class="form-select" required>
+                            <option value="">เลือกระดับการศึกษา</option>
+                            <option value="1">ไม่ได้เรียน</option>
+                            <option value="2">ไม่จบระดับประถมศึกษา</option>
+                            <option value="3">ระดับประถมศึกษา</option>
+                            <option value="4">ระดับอาชีวะ (ปวช./ปวส.)</option>
+                            <option value="5">ระดับมัธยมศึกษา</option>
+                            <option value="6">กำลังศึกษาระดับปริญญาตรี</option>
+                            <option value="7">ระดับปริญญาตรี</option>
+                            <option value="8">สูงกว่าปริญญาตรี</option>
+                            <option value="99">ไม่ต้องการระบุ</option>
+                        </select>
+                    </div>
+
+                    <!-- อาชีพ -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">อาชีพหลักของผู้ตอบ</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <select name="occupation" class="form-select" required>
+                            <option value="">เลือกอาชีพ</option>
+                            <option value="1">ข้าราชการ/ พนักงานของรัฐวิสาหกิจ</option>
+                            <option value="2">พนักงานบริษัทเอกชน</option>
+                            <option value="3">เจ้าของกิจการ/ ผู้ประกอบการ/ ค้าขาย</option>
+                            <option value="4">เกษตรกร/ ทำสวน/ ทำไร่/ ทำประมง</option>
+                            <option value="5">รับจ้างทั่วไป/ อาชีพอิสระ</option>
+                            <option value="6">นักเรียน/ นักศึกษา</option>
+                            <option value="7">แม่บ้าน/ ผู้ดูแลครอบครัว</option>
+                            <option value="8">ผู้เกษียณอายุ/ ไม่มีอาชีพ</option>
+                            <option value="99">ไม่ต้องการระบุ</option>
+                        </select>
+                    </div>
+
+                    <!-- รายได้ -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">รายได้เฉลี่ยโดยรวมต่อเดือน</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <select name="income" class="form-select" required>
+                            <option value="">เลือกช่วงรายได้</option>
+                            <option value="1">ต่ำกว่า 15,000 บาท</option>
+                            <option value="2">15,000 – 20,000 บาท</option>
+                            <option value="3">20,001 – 25,000 บาท</option>
+                            <option value="4">25,001 – 30,000 บาท</option>
+                            <option value="5">30,001 – 35,000 บาท</option>
+                            <option value="6">35,001 – 40,000 บาท</option>
+                            <option value="7">40,001 – 45,000 บาท</option>
+                            <option value="8">45,001 – 50,000 บาท</option>
+                            <option value="9">50,001 ขึ้นไป</option>
+                            <option value="99">ไม่ต้องการระบุ</option>
+                        </select>
+                    </div>
+
+                    <!-- จังหวัด -->
+                    <div class="form-group required">
+                        <label class="form-label">
+                            <span class="label-text">ภูมิลำเนาผู้ตอบอยู่ในจังหวัด</span>
+                            <span class="required-mark">*</span>
+                        </label>
+                        <input type="text" name="province" class="form-input" placeholder="กรอกชื่อจังหวัด..." required>
+                    </div>
+                </div>
+
+                <!-- ========== Set 5: ข้อมูลผู้สัมภาษณ์ ========== -->
+                <div class="form-section" data-section="5">
+                    <h3 class="section-title">
+                        <span class="section-number">5</span>
+                        ข้อมูลผู้สัมภาษณ์
+                    </h3>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span class="label-text">รหัสผู้สัมภาษณ์</span>
+                        </label>
+                        <input type="text" name="interviewer_code" class="form-input" placeholder="กรอกรหัสผู้สัมภาษณ์...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span class="label-text">วันที่เก็บข้อมูล</span>
+                        </label>
+                        <input type="date" name="interview_date" class="form-input" id="interviewDate">
+                        <p class="help-text">คลิกที่ช่องหรือไอคอนปฏิทินเพื่อเลือกวันที่</p>
+                    </div>
+                </div>
+
+                <!-- PDPA Consent -->
+                <div class="form-section pdpa-section" data-section="6">
+                    <h3 class="section-title">
+                        <span class="section-number">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </span>
+                        ความยินยอมในการเก็บรวบรวมข้อมูลส่วนบุคคล
+                    </h3>
+
+                    <div class="pdpa-consent-box">
+                        <div class="pdpa-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#26513C" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <div class="pdpa-content">
+                            <h4>นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</h4>
+                            <p>สถาบันพระปกเกล้า ให้ความสำคัญกับการคุ้มครองข้อมูลส่วนบุคคลของท่าน ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</p>
+                            <ul class="pdpa-list">
+                                <li>ข้อมูลของท่านจะถูกเก็บเป็นความลับและใช้เพื่อการวิจัยเท่านั้น</li>
+                                <li>ข้อมูลจะไม่ถูกเปิดเผยต่อบุคคลที่สาม</li>
+                                <li>ท่านมีสิทธิ์ในการเข้าถึง แก้ไข หรือลบข้อมูลของท่านได้ตลอดเวลา</li>
+                                <li>ข้อมูลจะถูกจัดเก็บอย่างปลอดภัยตามมาตรฐานสากล</li>
+                            </ul>
+                            <button type="button" class="btn-link" id="viewPDPABtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                อ่านนโยบายฉบับเต็ม
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group required pdpa-checkbox-group">
+                        <label class="pdpa-checkbox-label">
+                            <input type="checkbox" name="pdpa_consent" id="pdpaConsent" required>
+                            <span class="pdpa-checkbox-custom"></span>
+                            <span class="pdpa-checkbox-text">
+                                ข้าพเจ้ายินยอมให้สถาบันพระปกเกล้าเก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า เพื่อวัตถุประสงค์ในการสำรวจความคิดเห็นและการวิจัยทางวิชาการ ตามที่ระบุในนโยบายคุ้มครองข้อมูลส่วนบุคคล
+                                <span class="required-mark">*</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="saveBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        บันทึกแบบร่าง
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                        <span>ส่งแบบสำรวจ</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </main>
+
+    <!-- PDPA Modal -->
+    <div class="modal" id="pdpaModal">
+        <div class="modal-overlay" id="pdpaModalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</h3>
+                <button type="button" class="modal-close" id="closePDPAModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="pdpa-full-content">
+                    <h4>🔒 การเก็บรวบรวมข้อมูลส่วนบุคคล</h4>
+                    <p>สถาบันพระปกเกล้า ("สถาบันฯ") เก็บรวบรวมข้อมูลส่วนบุคคลของท่านเพื่อวัตถุประสงค์ในการสำรวจความคิดเห็นและการวิจัยทางวิชาการ ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</p>
+
+                    <h4>📋 ข้อมูลที่เก็บรวบรวม</h4>
+                    <ul>
+                        <li><strong>ข้อมูลส่วนบุคคลทั่วไป:</strong> เพศ, อายุ, ระดับการศึกษา, อาชีพ, รายได้, ภูมิลำเนา</li>
+                        <li><strong>ข้อมูลความคิดเห็น:</strong> คำตอบในแบบสำรวจเกี่ยวกับประเด็นทางการเมืองและสังคม</li>
+                        <li><strong>ข้อมูลเทคนิค:</strong> IP Address, เวลาที่กรอกแบบสำรวจ (สำหรับการตรวจสอบความถูกต้อง)</li>
+                    </ul>
+
+                    <h4>🎯 วัตถุประสงค์ในการใช้ข้อมูล</h4>
+                    <ul>
+                        <li>เพื่อการวิเคราะห์และนำเสนอผลการสำรวจความคิดเห็น</li>
+                        <li>เพื่อการวิจัยทางวิชาการด้านการเมืองและสังคม</li>
+                        <li>เพื่อการจัดทำรายงานและเผยแพร่ผลการศึกษา</li>
+                        <li>เพื่อปรับปรุงและพัฒนาระบบสำรวจความคิดเห็น</li>
+                    </ul>
+
+                    <h4>🛡️ การรักษาความปลอดภัยของข้อมูล</h4>
+                    <ul>
+                        <li>ข้อมูลทั้งหมดจะถูกเข้ารหัสและจัดเก็บในระบบที่ปลอดภัย</li>
+                        <li>มีการควบคุมการเข้าถึงข้อมูลเฉพาะผู้ที่ได้รับอนุญาตเท่านั้น</li>
+                        <li>ข้อมูลจะถูกจัดเก็บในรูปแบบที่ไม่สามารถระบุตัวตนได้ในรายงานผลการวิจัย</li>
+                        <li>มีการสำรองข้อมูลและมาตรการป้องกันการสูญหาย</li>
+                    </ul>
+
+                    <h4>📤 การเปิดเผยข้อมูล</h4>
+                    <p>สถาบันฯ จะไม่เปิดเผยข้อมูลส่วนบุคคลของท่านต่อบุคคลภายนอก ยกเว้น:</p>
+                    <ul>
+                        <li>ในกรณีที่กฎหมายกำหนด หรือมีคำสั่งศาล</li>
+                        <li>ในกรณีที่ท่านให้ความยินยอมอย่างชัดแจ้ง</li>
+                        <li>การเปิดเผยในรูปแบบสถิติรวมที่ไม่สามารถระบุตัวตนได้</li>
+                    </ul>
+
+                    <h4>⏰ ระยะเวลาในการเก็บรักษาข้อมูล</h4>
+                    <p>ข้อมูลของท่านจะถูกเก็บรักษาไว้เป็นระยะเวลา <strong>5 ปี</strong> นับจากวันที่ท่านให้ข้อมูล หรือจนกว่าท่านจะขอให้ลบข้อมูล หรือจนกว่าจะหมดความจำเป็นในการเก็บรักษา</p>
+
+                    <h4>✅ สิทธิของเจ้าของข้อมูลส่วนบุคคล</h4>
+                    <p>ท่านมีสิทธิ์ตามกฎหมายดังต่อไปนี้:</p>
+                    <ul>
+                        <li><strong>สิทธิในการเข้าถึงข้อมูล:</strong> ขอเข้าถึงและรับสำเนาข้อมูลส่วนบุคคลของท่าน</li>
+                        <li><strong>สิทธิในการแก้ไข:</strong> ขอแก้ไขข้อมูลที่ไม่ถูกต้องหรือไม่สมบูรณ์</li>
+                        <li><strong>สิทธิในการลบข้อมูล:</strong> ขอให้ลบหรือทำลายข้อมูลส่วนบุคคลของท่าน</li>
+                        <li><strong>สิทธิในการระงับการใช้:</strong> ขอระงับการใช้ข้อมูลส่วนบุคคลของท่าน</li>
+                        <li><strong>สิทธิในการคัดค้าน:</strong> คัดค้านการเก็บรวบรวม ใช้ หรือเปิดเผยข้อมูล</li>
+                        <li><strong>สิทธิในการถอนความยินยอม:</strong> ถอนความยินยอมที่เคยให้ไว้ได้ตลอดเวลา</li>
+                    </ul>
+
+                    <h4>📞 การติดต่อ</h4>
+                    <p>หากท่านมีคำถามหรือต้องการใช้สิทธิ์ของท่าน สามารถติดต่อได้ที่:</p>
+                    <div class="contact-box">
+                        <p><strong>สถาบันพระปกเกล้า</strong></p>
+                        <p>📍 888/26 ถนนวิภาวดีรังสิต แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900</p>
+                        <p>📧 Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2050445041604b50490e41430e5448">[email&#160;protected]</a></p>
+                        <p>☎️ โทรศัพท์: 0-2141-9000</p>
+                        <p>🕐 เวลาทำการ: จันทร์-วันศุกร์ 08:30-16:30 น.</p>
+                    </div>
+
+                    <div class="pdpa-footer-note">
+                        <p><em>นโยบายนี้มีผลบังคับใช้ตั้งแต่วันที่ 1 มิถุนายน 2565 และอาจมีการปรับปรุงเป็นครั้งคราว</em></p>
+                        <p><em>ปรับปรุงล่าสุด: พฤศจิกายน 2567</em></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="acceptPDPABtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    ยอมรับและปิด
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="form-footer">
+        <div class="container">
+            <p>© 2025 สถาบันพระปกเกล้า | King Prajadhipok's Institute</p>
+            <p>ข้อมูลของท่านจะถูกเก็บเป็นความลับและใช้เพื่อการวิจัยเท่านั้น</p>
+        </div>
+    </footer>
+
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Main JavaScript -->
+    <script src="poll-form.js"></script>
+
+</body>
+</html>
