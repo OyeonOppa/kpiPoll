@@ -310,23 +310,47 @@ document.head.appendChild(style);
 
 function saveFormData() {
     const form = document.getElementById('pollForm');
-    const formData = new FormData(form);
     const data = {};
     
-    for (let [key, value] of formData.entries()) {
-        if (data[key]) {
-            if (Array.isArray(data[key])) {
-                data[key].push(value);
-            } else {
-                data[key] = [data[key], value];
-            }
-        } else {
-            data[key] = value;
+    // บันทึก Radio buttons
+    const radios = form.querySelectorAll('input[type="radio"]:checked');
+    radios.forEach(radio => {
+        data[radio.name] = radio.value;
+    });
+    
+    // บันทึก Checkboxes (Q11)
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+    checkboxes.forEach(checkbox => {
+        if (!data[checkbox.name]) {
+            data[checkbox.name] = [];
         }
-    }
+        if (Array.isArray(data[checkbox.name])) {
+            data[checkbox.name].push(checkbox.value);
+        } else {
+            data[checkbox.name] = [data[checkbox.name], checkbox.value];
+        }
+    });
+    
+    // บันทึก Dropdowns (Select)
+    const selects = form.querySelectorAll('select');
+    selects.forEach(select => {
+        if (select.value) {
+            data[select.name] = select.value;
+        }
+    });
+    
+    // บันทึก Text inputs
+    const inputs = form.querySelectorAll('input[type="text"], input[type="date"]');
+    inputs.forEach(input => {
+        if (input.value) {
+            data[input.name] = input.value;
+        }
+    });
     
     localStorage.setItem('kpiPollData', JSON.stringify(data));
     localStorage.setItem('kpiPollTimestamp', new Date().toISOString());
+    
+    console.log('✅ Auto-save สำเร็จ:', Object.keys(data).length, 'fields');
 }
 
 function loadFormData() {
@@ -385,22 +409,59 @@ function fillFormData(data) {
             if (element.type === 'radio') {
                 if (element.value === value) {
                     element.checked = true;
+                    // Trigger change event for conditional logic
+                    element.dispatchEvent(new Event('change', { bubbles: true }));
                 }
             } else if (element.type === 'checkbox') {
                 if (Array.isArray(value)) {
                     if (value.includes(element.value)) {
                         element.checked = true;
+                        // Trigger change event
+                        element.dispatchEvent(new Event('change', { bubbles: true }));
                     }
                 } else if (element.value === value) {
                     element.checked = true;
+                    // Trigger change event
+                    element.dispatchEvent(new Event('change', { bubbles: true }));
                 }
             } else if (element.tagName === 'SELECT') {
                 element.value = value;
+                // Trigger change event for dropdowns
+                element.dispatchEvent(new Event('change', { bubbles: true }));
             } else if (element.tagName === 'INPUT') {
                 element.value = value;
+                // Trigger input event
+                element.dispatchEvent(new Event('input', { bubbles: true }));
             }
         });
     }
+    
+    // Force update conditional fields visibility after loading
+    setTimeout(() => {
+        // Q5: แสดง/ซ่อน "เรื่องอื่น"
+        const q5Select = document.getElementById('q5');
+        const q5OtherGroup = document.getElementById('q5_other_group');
+        if (q5Select && q5OtherGroup) {
+            q5OtherGroup.style.display = (q5Select.value === '9') ? 'block' : 'none';
+        }
+        
+        // Q6: แสดง/ซ่อน "เรื่องอื่น"
+        const q6Select = document.getElementById('q6');
+        const q6OtherGroup = document.getElementById('q6_other_group');
+        if (q6Select && q6OtherGroup) {
+            q6OtherGroup.style.display = (q6Select.value === '9') ? 'block' : 'none';
+        }
+        
+        // Q11: แสดง/ซ่อน "บุคคลอื่น"
+        const q11Other = document.querySelector('input[name="q11[]"][value="11"]');
+        const q11OtherGroup = document.getElementById('q11_other_group');
+        if (q11Other && q11OtherGroup) {
+            q11OtherGroup.style.display = q11Other.checked ? 'block' : 'none';
+        }
+        
+        // Update progress bar
+        updateProgress();
+    }, 100);
 }
 
 // ========================================
@@ -408,7 +469,7 @@ function fillFormData(data) {
 // ========================================
 
 // 🔥 เปลี่ยน URL นี้เป็น URL ของ Google Apps Script ของคุณ
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1RyVe_c1Jt6jXjk6gv9to5ESSapfFaMARIywlefm_TaFW6k4WOIcXYiKyVOlSoUIRnA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 
 async function submitForm(formData) {
     try {
