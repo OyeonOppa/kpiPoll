@@ -25,7 +25,7 @@
     <header class="form-header">
         <div class="container">
             <div class="header-content">
-                <img src="logo.png" 
+                <img src="/src/logo.png" 
                      alt="สถาบันพระปกเกล้า" 
                      class="logo-main" 
                      loading="lazy">
@@ -79,7 +79,6 @@
             <div class="form-title-section">
                 <div class="badge-required">การเมืองและสังคม</div>
                 <h2 class="form-title">KPI Poll</h2>
-                <p class="form-subtitle">แบบสำรวจความเห็นของประชาชนนี้ แบ่งเป็น 5 ส่วน โดยแต่ละส่วนต้องกรอกให้ครบถ้วนจึงจะไปส่วนถัดไปได้</p>
                 <div class="form-description">
                     <p>📋 กรุณาตอบความถามตามความเห็นของท่าน</p>
                     <p>⏱️ ใช้เวลาประมาณ 5-10 นาที</p>
@@ -661,22 +660,6 @@
                             ข้อมูลพื้นฐานของผู้ตอบ
                         </h3>
 
-                        <!-- เลขที่แบบสอบถาม -->
-                        <div class="form-group required">
-                            <label class="form-label">
-                                <span class="label-text">เลขที่แบบสอบถาม</span>
-                                <span class="required-mark">*</span>
-                            </label>
-                            <input type="number" 
-                                   name="questionnaire_no" 
-                                   id="questionnaireNo"
-                                   class="form-input" 
-                                   placeholder="กรอกเลขที่แบบสอบถาม (เช่น 1, 25, 1234)" 
-                                   min="1"
-                                   max="9999"
-                                   required>
-                        </div>
-
                         <!-- เพศ -->
                         <div class="form-group required">
                             <label class="form-label">
@@ -970,5 +953,4 @@
     <script src="poll-form.js"></script>
 
 </body>
-
 </html>

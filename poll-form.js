@@ -571,7 +571,7 @@ function fillFormData(data) {
 // Form Submission
 // ========================================
 
-const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1RyVe_c1Jt6jXjk6gv9to5ESSapfFaMARIywlefm_TaFW6k4WOIcXYiKyVOlSoUIRnA/exec';
 
 async function submitForm(formData) {
     try {
@@ -596,6 +596,26 @@ async function submitForm(formData) {
     }
 }
 
+// Get client's IP address from external API
+async function getClientIP() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error('Error getting IP:', error);
+        // Fallback: try another service
+        try {
+            const response2 = await fetch('https://api.my-ip.io/ip.json');
+            const data2 = await response2.json();
+            return data2.ip;
+        } catch (error2) {
+            console.error('Error getting IP from fallback:', error2);
+            return null;
+        }
+    }
+}
+
 function handleSubmit(e) {
     e.preventDefault();
     
@@ -608,56 +628,61 @@ function handleSubmit(e) {
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
     
-    const form = document.getElementById('pollForm');
-    const formData = new FormData(form);
-    
-    // Convert to object
-    const data = {};
-    for (let [key, value] of formData.entries()) {
-        if (data[key]) {
-            if (Array.isArray(data[key])) {
-                data[key].push(value);
+    // Get IP address first, then submit
+    getClientIP().then(ipAddress => {
+        const form = document.getElementById('pollForm');
+        const formData = new FormData(form);
+        
+        // Convert to object
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            if (data[key]) {
+                if (Array.isArray(data[key])) {
+                    data[key].push(value);
+                } else {
+                    data[key] = [data[key], value];
+                }
             } else {
-                data[key] = [data[key], value];
+                data[key] = value;
             }
-        } else {
-            data[key] = value;
         }
-    }
-    
-    // Add timestamp
-    data.timestamp = new Date().toISOString();
-    
-    console.log('Form Data:', data);
-    
-    submitForm(data)
-        .then(response => {
-            submitBtn.classList.remove('loading');
-            submitBtn.disabled = false;
+        
+        // Add IP address and timestamp
+        data.client_ip = ipAddress;
+        data.timestamp = new Date().toISOString();
+        
+        console.log('Form Data:', data);
+        console.log('Client IP:', ipAddress);
+        
+        return submitForm(data);
+    })
+    .then(response => {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+        
+        if (response.success) {
+            // Clear saved data
+            localStorage.removeItem('kpiPollData');
+            localStorage.removeItem('kpiPollStep');
+            localStorage.removeItem('kpiPollTimestamp');
             
-            if (response.success) {
-                // Clear saved data
-                localStorage.removeItem('kpiPollData');
-                localStorage.removeItem('kpiPollStep');
-                localStorage.removeItem('kpiPollTimestamp');
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'ส่งแบบสำรวจสำเร็จ!',
-                    html: `
-                        <p>ขอบคุณที่สละเวลาตอบแบบสำรวจของเรา</p>
-                        <p style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #26513C;">
-                            <strong>รหัสอ้างอิง:</strong> ${response.id}
-                        </p>
-                    `,
-                    confirmButtonColor: '#26513C',
-                    confirmButtonText: 'ปิด'
-                }).then(() => {
-                    // Reset form
-                    form.reset();
-                    currentStep = 1;
-                    document.querySelectorAll('.form-step').forEach(step => {
-                        step.classList.remove('active');
+            Swal.fire({
+                icon: 'success',
+                title: 'ส่งแบบสำรวจสำเร็จ!',
+                html: `
+                    <p>ขอบคุณที่สละเวลาตอบแบบสำรวจของเรา</p>
+                    <p style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #26513C;">
+                        <strong>รหัสอ้างอิง:</strong> ${response.id}
+                    </p>
+                `,
+                confirmButtonColor: '#26513C',
+                confirmButtonText: 'ปิด'
+            }).then(() => {
+                // Reset form
+                form.reset();
+                currentStep = 1;
+                document.querySelectorAll('.form-step').forEach(step => {
+                    step.classList.remove('active');
                     });
                     document.querySelector('.form-step[data-step="1"]').classList.add('active');
                     updateStepIndicators();
