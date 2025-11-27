@@ -10,7 +10,7 @@ const questionsPerStep = {
     1: 6, // Q1-Q6
     2: 5, // Q7-Q11
     3: 3, // Q12-Q14
-    4: 6, // Gender, Age, Education, Occupation, Income, Province
+    4: 7, // Questionnaire No, Gender, Age, Education, Occupation, Income, Province
     5: 1  // PDPA
 };
 
@@ -247,6 +247,41 @@ function prevStep(fromStep) {
 // ========================================
 
 function setupConditionalFields() {
+    // Questionnaire Number - Format to 4 digits
+    const questionnaireNo = document.getElementById('questionnaireNo');
+    const questionnaireDisplay = document.querySelector('#questionnaireDisplay .display-number');
+    
+    if (questionnaireNo && questionnaireDisplay) {
+        questionnaireNo.addEventListener('input', function() {
+            const value = this.value;
+            if (value) {
+                const num = parseInt(value);
+                if (num >= 1 && num <= 9999) {
+                    // แปลงเป็น 4 หลัก
+                    const formatted = String(num).padStart(4, '0');
+                    questionnaireDisplay.textContent = formatted;
+                    questionnaireDisplay.style.color = '#26513C';
+                    questionnaireDisplay.style.fontWeight = '700';
+                } else {
+                    questionnaireDisplay.textContent = '----';
+                    questionnaireDisplay.style.color = '#e74c3c';
+                    questionnaireDisplay.style.fontWeight = '500';
+                }
+            } else {
+                questionnaireDisplay.textContent = '----';
+                questionnaireDisplay.style.color = '#7f8c8d';
+                questionnaireDisplay.style.fontWeight = '500';
+            }
+        });
+        
+        // ป้องกันการกรอกเกิน 4 หลัก
+        questionnaireNo.addEventListener('keypress', function(e) {
+            if (this.value.length >= 4 && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab') {
+                e.preventDefault();
+            }
+        });
+    }
+    
     // Q5 - Show "Other" field
     document.addEventListener('change', function(e) {
         if (e.target.name === 'q5') {
@@ -536,7 +571,7 @@ function fillFormData(data) {
 // Form Submission
 // ========================================
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1RyVe_c1Jt6jXjk6gv9to5ESSapfFaMARIywlefm_TaFW6k4WOIcXYiKyVOlSoUIRnA/exec';
+const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
 async function submitForm(formData) {
     try {

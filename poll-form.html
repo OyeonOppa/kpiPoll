@@ -25,10 +25,12 @@
     <header class="form-header">
         <div class="container">
             <div class="header-content">
-                <img src="https://www.kpi.ac.th/uploads/files/KPI_symbol.png" alt="KPI Logo" class="logo-img" onerror="this.style.display='none'">
+                <img src="/src/logo.png" 
+                     alt="สถาบันพระปกเกล้า" 
+                     class="logo-main" 
+                     loading="lazy">
                 <div class="header-text">
-                    <h1>KPI Poll - สถาบันพระปกเกล้า</h1>
-                    <p>ศูนย์สำรวจความคิดเห็นสถาบันพระปกเกล้า</p>
+                    <h1>ศูนย์สำรวจความคิดเห็นสถาบันพระปกเกล้า</h1>
                 </div>
             </div>
         </div>
@@ -659,6 +661,22 @@
                             ข้อมูลพื้นฐานของผู้ตอบ
                         </h3>
 
+                        <!-- เลขที่แบบสอบถาม -->
+                        <div class="form-group required">
+                            <label class="form-label">
+                                <span class="label-text">เลขที่แบบสอบถาม</span>
+                                <span class="required-mark">*</span>
+                            </label>
+                            <input type="number" 
+                                   name="questionnaire_no" 
+                                   id="questionnaireNo"
+                                   class="form-input" 
+                                   placeholder="กรอกเลขที่แบบสอบถาม (เช่น 1, 25, 1234)" 
+                                   min="1"
+                                   max="9999"
+                                   required>
+                        </div>
+
                         <!-- เพศ -->
                         <div class="form-group required">
                             <label class="form-label">
@@ -916,7 +934,7 @@
                     <div class="contact-box">
                         <p><strong>สถาบันพระปกเกล้า</strong></p>
                         <p>📍 888/26 ถนนวิภาวดีรังสิต แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900</p>
-                        <p>📧 Email: webmaster@kpi.ac.th</p>
+                        <p>📧 Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ddaab8bfb0bcaea9b8af9db6adb4f3bcbef3a9b5">[email&#160;protected]</a></p>
                         <p>☎️ โทรศัพท์: 0-2141-9000</p>
                     </div>
 

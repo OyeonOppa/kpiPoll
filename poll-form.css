@@ -44,7 +44,7 @@ body {
 
 /* Header */
 .form-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    background: linear-gradient(135deg, #1a372b 0%, #26513C 100%);
     color: white;
     padding: 30px 0;
     box-shadow: var(--shadow-md);
@@ -53,27 +53,39 @@ body {
 .header-content {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
 }
 
-.logo-img {
-    width: 70px;
-    height: 70px;
+.logo-main {
+    width: 200px;
+    height: 200px;
     object-fit: contain;
-    background: white;
-    border-radius: 12px;
-    padding: 8px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.logo-main:hover {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.header-text {
+    flex: 1;
 }
 
 .header-text h1 {
-    font-size: 1.8em;
+    font-size: 2em;
     font-weight: 700;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    line-height: 1.2;
 }
 
 .header-text p {
-    font-size: 0.95em;
-    opacity: 0.9;
+    font-size: 1.05em;
+    opacity: 0.95;
+    font-weight: 400;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Progress Bar Container */
@@ -523,6 +535,44 @@ body {
     font-style: italic;
 }
 
+/* Questionnaire Number Display */
+.questionnaire-display {
+    margin-top: 15px;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.questionnaire-display .display-label {
+    font-size: 0.95em;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.questionnaire-display .display-number {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.1em;
+    background: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 2px 4px rgba(38, 81, 60, 0.1);
+}
+
+/* Remove spinner from number input */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 /* Step Navigation */
 .step-navigation {
     display: flex;
@@ -964,6 +1014,20 @@ body {
     .header-content {
         flex-direction: column;
         text-align: center;
+        gap: 20px;
+    }
+
+    .logo-main {
+        width: 150px;
+        height: 150px;
+    }
+
+    .header-text h1 {
+        font-size: 1.6em;
+    }
+
+    .header-text p {
+        font-size: 0.95em;
     }
 
     .step-indicators {
@@ -1010,6 +1074,19 @@ body {
 }
 
 @media (max-width: 480px) {
+    .logo-main {
+        width: 75px;
+        height: 75px;
+    }
+
+    .header-text h1 {
+        font-size: 1.3em;
+    }
+
+    .header-text p {
+        font-size: 0.85em;
+    }
+
     .form-title {
         font-size: 1.5em;
     }
