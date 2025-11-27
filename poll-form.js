@@ -1,89 +1,394 @@
 // ========================================
-// Date Input Enhancement
+// Global Variables
 // ========================================
 
-function initDateInput() {
-    const dateInput = document.getElementById('interviewDate');
+let currentStep = 1;
+const totalSteps = 5;
+
+// จำนวนคำถามแต่ละ Step
+const questionsPerStep = {
+    1: 6, // Q1-Q6
+    2: 5, // Q7-Q11
+    3: 3, // Q12-Q14
+    4: 6, // Gender, Age, Education, Occupation, Income, Province
+    5: 1  // PDPA
+};
+
+// ========================================
+// Step Navigation Functions
+// ========================================
+
+function updateStepIndicators() {
+    const stepIndicators = document.querySelectorAll('.step-indicator');
     
-    if (dateInput) {
-        // Set default date to today
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        const todayString = `${year}-${month}-${day}`;
+    stepIndicators.forEach((indicator, index) => {
+        const stepNumber = index + 1;
         
-        dateInput.value = todayString;
+        // Remove all classes
+        indicator.classList.remove('active', 'completed');
         
-        // Add click handler to open calendar when clicking anywhere on the input
-        dateInput.addEventListener('click', function(e) {
-            this.showPicker && this.showPicker();
-        });
-        
-        // Also trigger on icon area
-        dateInput.parentElement.addEventListener('click', function(e) {
-            if (e.target !== dateInput) {
-                dateInput.focus();
-                dateInput.showPicker && dateInput.showPicker();
+        // Add appropriate class
+        if (stepNumber < currentStep) {
+            indicator.classList.add('completed');
+        } else if (stepNumber === currentStep) {
+            indicator.classList.add('active');
+        }
+    });
+}
+
+function updateProgressBar() {
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const progressStatus = document.getElementById('progressStatus');
+    
+    // Calculate percentage
+    const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+    progressBar.style.width = percentage + '%';
+    
+    // Update text
+    progressText.textContent = `ส่วนที่ ${currentStep}/${totalSteps}`;
+    
+    // Count completed questions in current step
+    const currentStepEl = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+    if (currentStepEl) {
+        const completed = countCompletedQuestions(currentStepEl);
+        const total = questionsPerStep[currentStep];
+        progressStatus.textContent = `ข้อ ${completed}/${total} ครบ`;
+    }
+}
+
+function countCompletedQuestions(stepElement) {
+    let completed = 0;
+    
+    // Count radio groups
+    const radioGroups = {};
+    stepElement.querySelectorAll('input[type="radio"]').forEach(radio => {
+        const name = radio.getAttribute('name');
+        if (!radioGroups[name]) {
+            radioGroups[name] = false;
+        }
+        if (radio.checked) {
+            radioGroups[name] = true;
+        }
+    });
+    completed += Object.values(radioGroups).filter(v => v).length;
+    
+    // Count selects
+    stepElement.querySelectorAll('select[required]').forEach(select => {
+        if (select.value) completed++;
+    });
+    
+    // Count text inputs
+    stepElement.querySelectorAll('input[type="text"][required]').forEach(input => {
+        if (input.value.trim()) completed++;
+    });
+    
+    // Count checkboxes (Q11 - ต้องเลือกอย่างน้อย 1)
+    const q11Checkboxes = stepElement.querySelectorAll('input[name="q11[]"]');
+    if (q11Checkboxes.length > 0) {
+        const q11Checked = Array.from(q11Checkboxes).some(cb => cb.checked);
+        if (q11Checked) completed++;
+    }
+    
+    // Count PDPA checkbox
+    const pdpaCheckbox = stepElement.querySelector('#pdpaConsent');
+    if (pdpaCheckbox && pdpaCheckbox.checked) {
+        completed++;
+    }
+    
+    return completed;
+}
+
+function validateStep(stepNumber) {
+    const stepElement = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+    if (!stepElement) return false;
+    
+    let isValid = true;
+    let firstInvalidField = null;
+    
+    // ตรวจสอบ Radio buttons
+    const radioGroups = {};
+    stepElement.querySelectorAll('input[type="radio"][required]').forEach(radio => {
+        const name = radio.getAttribute('name');
+        radioGroups[name] = radioGroups[name] || stepElement.querySelector(`input[name="${name}"]:checked`);
+    });
+    
+    for (let [name, checked] of Object.entries(radioGroups)) {
+        if (!checked) {
+            isValid = false;
+            if (!firstInvalidField) {
+                const group = stepElement.querySelector(`input[name="${name}"]`).closest('.form-group');
+                firstInvalidField = group;
+                group.classList.add('shake');
+                setTimeout(() => group.classList.remove('shake'), 500);
             }
+        }
+    }
+    
+    // ตรวจสอบ Select dropdowns
+    stepElement.querySelectorAll('select[required]').forEach(select => {
+        if (!select.value) {
+            isValid = false;
+            if (!firstInvalidField) {
+                const group = select.closest('.form-group');
+                firstInvalidField = group;
+                group.classList.add('shake');
+                setTimeout(() => group.classList.remove('shake'), 500);
+            }
+            select.style.borderColor = '#e74c3c';
+        } else {
+            select.style.borderColor = '#e0e0e0';
+        }
+    });
+    
+    // ตรวจสอบ Text inputs
+    stepElement.querySelectorAll('input[type="text"][required]').forEach(input => {
+        if (!input.value.trim()) {
+            isValid = false;
+            if (!firstInvalidField) {
+                const group = input.closest('.form-group');
+                firstInvalidField = group;
+                group.classList.add('shake');
+                setTimeout(() => group.classList.remove('shake'), 500);
+            }
+            input.style.borderColor = '#e74c3c';
+        } else {
+            input.style.borderColor = '#e0e0e0';
+        }
+    });
+    
+    // ตรวจสอบ Q11 - ต้องเลือกอย่างน้อย 1 ข้อ
+    if (stepNumber === 2) {
+        const q11Checkboxes = stepElement.querySelectorAll('input[name="q11[]"]');
+        const q11Checked = Array.from(q11Checkboxes).filter(cb => cb.checked);
+        
+        if (q11Checked.length === 0) {
+            isValid = false;
+            if (!firstInvalidField) {
+                const group = q11Checkboxes[0].closest('.form-group');
+                firstInvalidField = group;
+                group.classList.add('shake');
+                setTimeout(() => group.classList.remove('shake'), 500);
+            }
+        }
+    }
+    
+    // ตรวจสอบ PDPA
+    if (stepNumber === 5) {
+        const pdpaCheckbox = document.getElementById('pdpaConsent');
+        if (!pdpaCheckbox.checked) {
+            isValid = false;
+            if (!firstInvalidField) {
+                const group = pdpaCheckbox.closest('.form-group');
+                firstInvalidField = group;
+                group.classList.add('shake');
+                setTimeout(() => group.classList.remove('shake'), 500);
+            }
+        }
+    }
+    
+    // Scroll to first invalid field
+    if (!isValid && firstInvalidField) {
+        firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        Swal.fire({
+            icon: 'warning',
+            title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+            text: 'โปรดตรวจสอบและกรอกข้อมูลที่จำเป็นทั้งหมดในหน้านี้',
+            confirmButtonColor: '#e74c3c'
         });
     }
+    
+    return isValid;
+}
+
+function nextStep(fromStep) {
+    // Validate current step
+    if (!validateStep(fromStep)) {
+        return;
+    }
+    
+    // บันทึกข้อมูล
+    saveFormData();
+    
+    // Hide current step
+    document.querySelector(`.form-step[data-step="${fromStep}"]`).classList.remove('active');
+    
+    // Show next step
+    currentStep = fromStep + 1;
+    document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+    
+    // Update UI
+    updateStepIndicators();
+    updateProgressBar();
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevStep(fromStep) {
+    // Hide current step
+    document.querySelector(`.form-step[data-step="${fromStep}"]`).classList.remove('active');
+    
+    // Show previous step
+    currentStep = fromStep - 1;
+    document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+    
+    // Update UI
+    updateStepIndicators();
+    updateProgressBar();
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ========================================
+// Conditional Fields Logic
+// ========================================
+
+function setupConditionalFields() {
+    // Q5 - Show "Other" field
+    document.addEventListener('change', function(e) {
+        if (e.target.name === 'q5') {
+            const otherGroup = document.getElementById('q5_other_group');
+            const otherInput = document.querySelector('[name="q5_other"]');
+            if (e.target.value === '9') {
+                otherGroup.style.display = 'block';
+                otherInput.required = true;
+            } else {
+                otherGroup.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+            }
+        }
+    });
+    
+    // Q6 - Show "Other" field
+    document.addEventListener('change', function(e) {
+        if (e.target.name === 'q6') {
+            const otherGroup = document.getElementById('q6_other_group');
+            const otherInput = document.querySelector('[name="q6_other"]');
+            if (e.target.value === '9') {
+                otherGroup.style.display = 'block';
+                otherInput.required = true;
+            } else {
+                otherGroup.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+            }
+        }
+    });
+    
+    // Q11 - Show "Other" field and limit to 3
+    document.addEventListener('change', function(e) {
+        if (e.target.name === 'q11[]') {
+            const checkboxes = document.querySelectorAll('[name="q11[]"]');
+            const noOpinionCheckbox = Array.from(checkboxes).find(cb => cb.value === '99');
+            const otherCheckboxes = Array.from(checkboxes).filter(cb => cb.value !== '99');
+            
+            // ถ้าเลือก "ไม่มีความคิดเห็น"
+            if (e.target.value === '99' && e.target.checked) {
+                // ยกเลิกการเลือกทั้งหมดยกเว้น "ไม่มีความคิดเห็น"
+                otherCheckboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.disabled = true;
+                });
+                
+                // ซ่อน "บุคคลอื่น" field
+                const otherGroup = document.getElementById('q11_other_group');
+                const otherInput = document.querySelector('[name="q11_other"]');
+                otherGroup.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+            } 
+            // ถ้ายกเลิก "ไม่มีความคิดเห็น"
+            else if (e.target.value === '99' && !e.target.checked) {
+                // เปิดให้เลือกตัวอื่นได้
+                otherCheckboxes.forEach(cb => {
+                    cb.disabled = false;
+                });
+            }
+            // ถ้าเลือกตัวเลือกอื่นที่ไม่ใช่ "ไม่มีความคิดเห็น"
+            else if (e.target.value !== '99' && e.target.checked) {
+                // ยกเลิก "ไม่มีความคิดเห็น" และ disable มัน
+                if (noOpinionCheckbox) {
+                    noOpinionCheckbox.checked = false;
+                    noOpinionCheckbox.disabled = true;
+                }
+            }
+            // ถ้ายกเลิกตัวเลือกอื่น และไม่มีอะไรถูกเลือกเลย
+            else if (e.target.value !== '99' && !e.target.checked) {
+                const anyChecked = otherCheckboxes.some(cb => cb.checked);
+                if (!anyChecked && noOpinionCheckbox) {
+                    // เปิดให้เลือก "ไม่มีความคิดเห็น" ได้
+                    noOpinionCheckbox.disabled = false;
+                }
+            }
+            
+            const checked = Array.from(checkboxes).filter(cb => cb.checked);
+            
+            // Check if "บุคคลอื่น" is selected
+            const otherCheckbox = Array.from(checkboxes).find(cb => cb.value === '11');
+            const otherGroup = document.getElementById('q11_other_group');
+            const otherInput = document.querySelector('[name="q11_other"]');
+            
+            if (otherCheckbox && otherCheckbox.checked) {
+                otherGroup.style.display = 'block';
+                otherInput.required = true;
+            } else {
+                otherGroup.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+            }
+            
+            // Limit to 3 selections (ไม่นับ "ไม่มีความคิดเห็น")
+            const regularChecked = otherCheckboxes.filter(cb => cb.checked);
+            if (regularChecked.length > 3) {
+                e.target.checked = false;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'เลือกได้สูงสุด 3 ข้อ',
+                    text: 'กรุณาเลือกไม่เกิน 3 ข้อ',
+                    confirmButtonColor: '#26513C',
+                    timer: 2000
+                });
+            }
+        }
+    });
 }
 
 // ========================================
 // PDPA Modal
 // ========================================
 
-function initPDPAModal() {
+function setupPDPAModal() {
     const viewPDPABtn = document.getElementById('viewPDPABtn');
     const pdpaModal = document.getElementById('pdpaModal');
     const closePDPAModal = document.getElementById('closePDPAModal');
     const pdpaModalOverlay = document.getElementById('pdpaModalOverlay');
     const acceptPDPABtn = document.getElementById('acceptPDPABtn');
     const pdpaConsent = document.getElementById('pdpaConsent');
-    const submitBtn = document.getElementById('submitBtn');
-
-    // Open modal
-    if (viewPDPABtn) {
-        viewPDPABtn.addEventListener('click', () => {
-            pdpaModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    }
-
-    // Close modal functions
+    
     const closeModal = () => {
         pdpaModal.classList.remove('active');
         document.body.style.overflow = '';
     };
-
-    if (closePDPAModal) {
-        closePDPAModal.addEventListener('click', closeModal);
-    }
-
-    if (pdpaModalOverlay) {
-        pdpaModalOverlay.addEventListener('click', closeModal);
-    }
-
-    // Accept and close
-    if (acceptPDPABtn) {
-        acceptPDPABtn.addEventListener('click', () => {
-            if (pdpaConsent) {
-                pdpaConsent.checked = true;
-                submitBtn.disabled = false;
-            }
-            closeModal();
-        });
-    }
-
-    // Enable/disable submit button based on PDPA consent
-    if (pdpaConsent && submitBtn) {
-        pdpaConsent.addEventListener('change', function() {
-            submitBtn.disabled = !this.checked;
-        });
-    }
-
-    // Close modal on ESC key
+    
+    viewPDPABtn?.addEventListener('click', () => {
+        pdpaModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    closePDPAModal?.addEventListener('click', closeModal);
+    pdpaModalOverlay?.addEventListener('click', closeModal);
+    
+    acceptPDPABtn?.addEventListener('click', () => {
+        pdpaConsent.checked = true;
+        updateProgressBar();
+        closeModal();
+    });
+    
+    // Close on ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && pdpaModal.classList.contains('active')) {
             closeModal();
@@ -92,220 +397,7 @@ function initPDPAModal() {
 }
 
 // ========================================
-// Form Progress Tracking
-// ========================================
-
-function updateProgress() {
-    const form = document.getElementById('pollForm');
-    const sections = form.querySelectorAll('.form-section');
-    const requiredFields = form.querySelectorAll('[required]');
-    
-    let completedCount = 0;
-    const radioCheckboxGroups = new Set();
-    
-    requiredFields.forEach(field => {
-        if (field.type === 'radio' || field.type === 'checkbox') {
-            const name = field.getAttribute('name');
-            if (!radioCheckboxGroups.has(name)) {
-                radioCheckboxGroups.add(name);
-                const checked = form.querySelector(`[name="${name}"]:checked`);
-                if (checked) completedCount++;
-            }
-        } else if (field.value.trim() !== '') {
-            completedCount++;
-        }
-    });
-    
-    const totalRequired = radioCheckboxGroups.size + (requiredFields.length - Array.from(requiredFields).filter(f => f.type === 'radio' || f.type === 'checkbox').length);
-    const percentage = Math.round((completedCount / totalRequired) * 100);
-    
-    // Update progress bar
-    const progressBar = document.getElementById('progressBar');
-    if (progressBar) {
-        progressBar.style.width = percentage + '%';
-        progressBar.style.background = `linear-gradient(90deg, #26513C ${percentage}%, #e0e0e0 ${percentage}%)`;
-    }
-    
-    // Update progress text (exclude PDPA section from count)
-    const sectionsWithoutPDPA = Array.from(sections).filter(s => !s.classList.contains('pdpa-section'));
-    const currentSection = Math.min(Math.ceil((completedCount / totalRequired) * sectionsWithoutPDPA.length), sectionsWithoutPDPA.length);
-    document.getElementById('progressText').textContent = `ส่วนที่ ${currentSection}/${sectionsWithoutPDPA.length}`;
-    document.getElementById('progressPercent').textContent = percentage + '%';
-}
-
-// ========================================
-// Conditional Fields (Show/Hide)
-// ========================================
-
-// Q5 - Show "Other" field
-document.addEventListener('change', function(e) {
-    if (e.target.name === 'q5') {
-        const otherGroup = document.getElementById('q5_other_group');
-        if (e.target.value === '9') {
-            otherGroup.style.display = 'block';
-            document.querySelector('[name="q5_other"]').required = true;
-        } else {
-            otherGroup.style.display = 'none';
-            document.querySelector('[name="q5_other"]').required = false;
-            document.querySelector('[name="q5_other"]').value = '';
-        }
-    }
-});
-
-// Q6 - Show "Other" field
-document.addEventListener('change', function(e) {
-    if (e.target.name === 'q6') {
-        const otherGroup = document.getElementById('q6_other_group');
-        if (e.target.value === '9') {
-            otherGroup.style.display = 'block';
-            document.querySelector('[name="q6_other"]').required = true;
-        } else {
-            otherGroup.style.display = 'none';
-            document.querySelector('[name="q6_other"]').required = false;
-            document.querySelector('[name="q6_other"]').value = '';
-        }
-    }
-});
-
-// Q11 - Show "Other" field and limit selection to 3
-document.addEventListener('change', function(e) {
-    if (e.target.name === 'q11[]') {
-        const checkboxes = document.querySelectorAll('[name="q11[]"]');
-        const checked = Array.from(checkboxes).filter(cb => cb.checked);
-        
-        // Check if "บุคคลอื่น" is selected
-        const otherCheckbox = Array.from(checkboxes).find(cb => cb.value === '11');
-        const otherGroup = document.getElementById('q11_other_group');
-        
-        if (otherCheckbox && otherCheckbox.checked) {
-            otherGroup.style.display = 'block';
-            document.querySelector('[name="q11_other"]').required = true;
-        } else {
-            otherGroup.style.display = 'none';
-            document.querySelector('[name="q11_other"]').required = false;
-            document.querySelector('[name="q11_other"]').value = '';
-        }
-        
-        // Limit to 3 selections
-        if (checked.length > 3) {
-            e.target.checked = false;
-            Swal.fire({
-                icon: 'warning',
-                title: 'เลือกได้สูงสุด 3 ข้อ',
-                text: 'กรุณาเลือกไม่เกิน 3 ข้อ',
-                confirmButtonColor: '#26513C',
-                timer: 2000
-            });
-        }
-    }
-});
-
-// ========================================
-// Form Validation
-// ========================================
-
-function validateForm() {
-    const form = document.getElementById('pollForm');
-    const requiredFields = form.querySelectorAll('[required]');
-    let isValid = true;
-    let firstInvalidField = null;
-    
-    // Check Q11 - must select at least 1
-    const q11Checkboxes = form.querySelectorAll('[name="q11[]"]');
-    const q11Checked = Array.from(q11Checkboxes).filter(cb => cb.checked);
-    
-    if (q11Checked.length === 0) {
-        isValid = false;
-        const q11Group = q11Checkboxes[0].closest('.form-group');
-        if (!firstInvalidField) {
-            firstInvalidField = q11Group;
-            q11Group.style.animation = 'shake 0.5s';
-            setTimeout(() => {
-                q11Group.style.animation = '';
-            }, 500);
-        }
-    }
-    
-    requiredFields.forEach(field => {
-        const formGroup = field.closest('.form-group');
-        
-        if (field.type === 'radio') {
-            const name = field.getAttribute('name');
-            const checked = form.querySelector(`[name="${name}"]:checked`);
-            
-            if (!checked && !firstInvalidField) {
-                isValid = false;
-                firstInvalidField = formGroup;
-                formGroup.style.animation = 'shake 0.5s';
-                setTimeout(() => {
-                    formGroup.style.animation = '';
-                }, 500);
-            }
-        } else if (field.value.trim() === '') {
-            isValid = false;
-            if (!firstInvalidField) {
-                firstInvalidField = formGroup;
-                formGroup.style.animation = 'shake 0.5s';
-                setTimeout(() => {
-                    formGroup.style.animation = '';
-                }, 500);
-            }
-            field.style.borderColor = '#e74c3c';
-        } else {
-            field.style.borderColor = '#e0e0e0';
-        }
-    });
-    
-    if (!isValid && firstInvalidField) {
-        firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    
-    return isValid;
-}
-
-// Add shake animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-        20%, 40%, 60%, 80% { transform: translateX(10px); }
-    }
-    
-    .help-text {
-        font-size: 0.9em;
-        color: #7f8c8d;
-        margin-top: 10px;
-        font-style: italic;
-    }
-    
-    .form-input {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 1em;
-        font-family: 'Sarabun', sans-serif;
-        transition: all 0.3s;
-    }
-    
-    .form-input:focus {
-        outline: none;
-        border-color: #26513C;
-        box-shadow: 0 0 0 3px rgba(38, 81, 60, 0.1);
-    }
-    
-    #progressBar {
-        height: 8px;
-        background: linear-gradient(90deg, #26513C 0%, #e0e0e0 0%);
-        border-radius: 10px;
-        transition: all 0.5s ease;
-    }
-`;
-document.head.appendChild(style);
-
-// ========================================
-// Auto Save to LocalStorage
+// Form Data Management
 // ========================================
 
 function saveFormData() {
@@ -318,7 +410,7 @@ function saveFormData() {
         data[radio.name] = radio.value;
     });
     
-    // บันทึก Checkboxes (Q11)
+    // บันทึก Checkboxes
     const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
     checkboxes.forEach(checkbox => {
         if (!data[checkbox.name]) {
@@ -326,12 +418,10 @@ function saveFormData() {
         }
         if (Array.isArray(data[checkbox.name])) {
             data[checkbox.name].push(checkbox.value);
-        } else {
-            data[checkbox.name] = [data[checkbox.name], checkbox.value];
         }
     });
     
-    // บันทึก Dropdowns (Select)
+    // บันทึก Selects
     const selects = form.querySelectorAll('select');
     selects.forEach(select => {
         if (select.value) {
@@ -340,7 +430,7 @@ function saveFormData() {
     });
     
     // บันทึก Text inputs
-    const inputs = form.querySelectorAll('input[type="text"], input[type="date"]');
+    const inputs = form.querySelectorAll('input[type="text"]');
     inputs.forEach(input => {
         if (input.value) {
             data[input.name] = input.value;
@@ -348,13 +438,13 @@ function saveFormData() {
     });
     
     localStorage.setItem('kpiPollData', JSON.stringify(data));
+    localStorage.setItem('kpiPollStep', currentStep.toString());
     localStorage.setItem('kpiPollTimestamp', new Date().toISOString());
-    
-    console.log('✅ Auto-save สำเร็จ:', Object.keys(data).length, 'fields');
 }
 
 function loadFormData() {
     const savedData = localStorage.getItem('kpiPollData');
+    const savedStep = localStorage.getItem('kpiPollStep');
     const timestamp = localStorage.getItem('kpiPollTimestamp');
     
     if (savedData && timestamp) {
@@ -363,7 +453,7 @@ function loadFormData() {
         const now = new Date();
         const daysDiff = (now - savedDate) / (1000 * 60 * 60 * 24);
         
-        // Only load if saved within 7 days
+        // โหลดถ้าบันทึกไว้ภายใน 7 วัน
         if (daysDiff < 7) {
             Swal.fire({
                 title: 'พบข้อมูลที่บันทึกไว้',
@@ -377,7 +467,19 @@ function loadFormData() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     fillFormData(data);
-                    updateProgress();
+                    
+                    // กลับไปที่ Step ที่บันทึกไว้
+                    if (savedStep) {
+                        const stepNum = parseInt(savedStep);
+                        if (stepNum > 1 && stepNum <= totalSteps) {
+                            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+                            currentStep = stepNum;
+                            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+                        }
+                    }
+                    
+                    updateStepIndicators();
+                    updateProgressBar();
                     
                     Swal.fire({
                         icon: 'success',
@@ -388,12 +490,13 @@ function loadFormData() {
                     });
                 } else {
                     localStorage.removeItem('kpiPollData');
+                    localStorage.removeItem('kpiPollStep');
                     localStorage.removeItem('kpiPollTimestamp');
                 }
             });
         } else {
-            // Clear old data
             localStorage.removeItem('kpiPollData');
+            localStorage.removeItem('kpiPollStep');
             localStorage.removeItem('kpiPollTimestamp');
         }
     }
@@ -409,80 +512,43 @@ function fillFormData(data) {
             if (element.type === 'radio') {
                 if (element.value === value) {
                     element.checked = true;
-                    // Trigger change event for conditional logic
                     element.dispatchEvent(new Event('change', { bubbles: true }));
                 }
             } else if (element.type === 'checkbox') {
                 if (Array.isArray(value)) {
                     if (value.includes(element.value)) {
                         element.checked = true;
-                        // Trigger change event
                         element.dispatchEvent(new Event('change', { bubbles: true }));
                     }
-                } else if (element.value === value) {
-                    element.checked = true;
-                    // Trigger change event
-                    element.dispatchEvent(new Event('change', { bubbles: true }));
                 }
             } else if (element.tagName === 'SELECT') {
                 element.value = value;
-                // Trigger change event for dropdowns
                 element.dispatchEvent(new Event('change', { bubbles: true }));
             } else if (element.tagName === 'INPUT') {
                 element.value = value;
-                // Trigger input event
                 element.dispatchEvent(new Event('input', { bubbles: true }));
             }
         });
     }
-    
-    // Force update conditional fields visibility after loading
-    setTimeout(() => {
-        // Q5: แสดง/ซ่อน "เรื่องอื่น"
-        const q5Select = document.getElementById('q5');
-        const q5OtherGroup = document.getElementById('q5_other_group');
-        if (q5Select && q5OtherGroup) {
-            q5OtherGroup.style.display = (q5Select.value === '9') ? 'block' : 'none';
-        }
-        
-        // Q6: แสดง/ซ่อน "เรื่องอื่น"
-        const q6Select = document.getElementById('q6');
-        const q6OtherGroup = document.getElementById('q6_other_group');
-        if (q6Select && q6OtherGroup) {
-            q6OtherGroup.style.display = (q6Select.value === '9') ? 'block' : 'none';
-        }
-        
-        // Q11: แสดง/ซ่อน "บุคคลอื่น"
-        const q11Other = document.querySelector('input[name="q11[]"][value="11"]');
-        const q11OtherGroup = document.getElementById('q11_other_group');
-        if (q11Other && q11OtherGroup) {
-            q11OtherGroup.style.display = q11Other.checked ? 'block' : 'none';
-        }
-        
-        // Update progress bar
-        updateProgress();
-    }, 100);
 }
 
 // ========================================
 // Form Submission
 // ========================================
 
-// 🔥 เปลี่ยน URL นี้เป็น URL ของ Google Apps Script ของคุณ
-const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1RyVe_c1Jt6jXjk6gv9to5ESSapfFaMARIywlefm_TaFW6k4WOIcXYiKyVOlSoUIRnA/exec';
 
 async function submitForm(formData) {
     try {
         const response = await fetch(SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors', // สำคัญ! ต้องใช้ no-cors กับ Google Apps Script
+            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(formData)
         });
         
-        // no-cors จะไม่ได้ response กลับมา แต่ถ้าไม่มี error แสดงว่าสำเร็จ
         return { 
             success: true, 
             id: 'KPI-POLL-' + Date.now(),
@@ -498,13 +564,8 @@ async function submitForm(formData) {
 function handleSubmit(e) {
     e.preventDefault();
     
-    if (!validateForm()) {
-        Swal.fire({
-            icon: 'error',
-            title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-            text: 'โปรดตรวจสอบและกรอกข้อมูลที่จำเป็นทั้งหมด',
-            confirmButtonColor: '#e74c3c'
-        });
+    // Validate final step
+    if (!validateStep(5)) {
         return;
     }
     
@@ -515,7 +576,7 @@ function handleSubmit(e) {
     const form = document.getElementById('pollForm');
     const formData = new FormData(form);
     
-    // Convert FormData to object
+    // Convert to object
     const data = {};
     for (let [key, value] of formData.entries()) {
         if (data[key]) {
@@ -529,6 +590,9 @@ function handleSubmit(e) {
         }
     }
     
+    // Add timestamp
+    data.timestamp = new Date().toISOString();
+    
     console.log('Form Data:', data);
     
     submitForm(data)
@@ -539,6 +603,7 @@ function handleSubmit(e) {
             if (response.success) {
                 // Clear saved data
                 localStorage.removeItem('kpiPollData');
+                localStorage.removeItem('kpiPollStep');
                 localStorage.removeItem('kpiPollTimestamp');
                 
                 Swal.fire({
@@ -555,7 +620,13 @@ function handleSubmit(e) {
                 }).then(() => {
                     // Reset form
                     form.reset();
-                    updateProgress();
+                    currentStep = 1;
+                    document.querySelectorAll('.form-step').forEach(step => {
+                        step.classList.remove('active');
+                    });
+                    document.querySelector('.form-step[data-step="1"]').classList.add('active');
+                    updateStepIndicators();
+                    updateProgressBar();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             }
@@ -573,15 +644,28 @@ function handleSubmit(e) {
         });
 }
 
-function handleSaveDraft() {
-    saveFormData();
+// ========================================
+// Auto-save & Progress Update
+// ========================================
+
+function setupAutoSave() {
+    const form = document.getElementById('pollForm');
     
-    Swal.fire({
-        icon: 'success',
-        title: 'บันทึกแบบร่างสำเร็จ',
-        text: 'ข้อมูลของท่านถูกบันทึกไว้แล้ว สามารถกลับมากรอกต่อได้ภายใน 7 วัน',
-        confirmButtonColor: '#26513C',
-        timer: 2000
+    // Auto-save every 30 seconds
+    setInterval(() => {
+        const hasData = Array.from(new FormData(form)).length > 0;
+        if (hasData) {
+            saveFormData();
+        }
+    }, 30000);
+    
+    // Update progress on input
+    form.addEventListener('input', () => {
+        updateProgressBar();
+    });
+    
+    form.addEventListener('change', () => {
+        updateProgressBar();
     });
 }
 
@@ -590,46 +674,28 @@ function handleSaveDraft() {
 // ========================================
 
 function init() {
-    console.log('🚀 Initializing KPI Poll Form');
+    console.log('🚀 Initializing KPI Poll Wizard');
     
-    // Initialize Date Input
-    initDateInput();
-    
-    // Initialize PDPA Modal
-    initPDPAModal();
+    // Setup
+    setupConditionalFields();
+    setupPDPAModal();
+    setupAutoSave();
     
     // Load saved data
     loadFormData();
     
-    // Auto-save every 30 seconds
-    setInterval(() => {
-        const form = document.getElementById('pollForm');
-        const hasData = Array.from(new FormData(form)).length > 0;
-        if (hasData) {
-            saveFormData();
-            console.log('📝 Auto-saved form data');
-        }
-    }, 30000);
+    // Initialize UI
+    updateStepIndicators();
+    updateProgressBar();
     
     // Form submission
     const form = document.getElementById('pollForm');
     form.addEventListener('submit', handleSubmit);
     
-    // Save draft button
-    const saveBtn = document.getElementById('saveBtn');
-    saveBtn.addEventListener('click', handleSaveDraft);
-    
-    // Update progress on input
-    form.addEventListener('input', updateProgress);
-    form.addEventListener('change', updateProgress);
-    
-    // Initial progress update
-    updateProgress();
-    
     // Prevent accidental page leave
     window.addEventListener('beforeunload', (e) => {
         const hasUnsavedData = localStorage.getItem('kpiPollData');
-        if (hasUnsavedData) {
+        if (hasUnsavedData && currentStep < totalSteps) {
             e.preventDefault();
             e.returnValue = '';
         }
@@ -640,15 +706,3 @@ function init() {
 
 // Run on DOM ready
 document.addEventListener('DOMContentLoaded', init);
-
-// ========================================
-// Keyboard Shortcuts
-// ========================================
-
-document.addEventListener('keydown', (e) => {
-    // Ctrl/Cmd + S to save draft
-    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault();
-        handleSaveDraft();
-    }
-});
