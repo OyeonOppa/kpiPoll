@@ -46,19 +46,19 @@ body {
 .form-header {
     background: linear-gradient(135deg, #1a372b 0%, #26513C 100%);
     color: white;
-    padding: 30px 0;
+    padding: 25px 0;
     box-shadow: var(--shadow-md);
 }
 
 .header-content {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
 }
 
 .logo-main {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 65px;
     object-fit: contain;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
     transition: transform 0.3s ease;
@@ -66,7 +66,7 @@ body {
 }
 
 .logo-main:hover {
-    transform: scale(1.05) rotate(1deg);
+    transform: scale(1.05) rotate(2deg);
 }
 
 .header-text {
@@ -74,15 +74,15 @@ body {
 }
 
 .header-text h1 {
-    font-size: 2em;
+    font-size: 1.8em;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     line-height: 1.2;
 }
 
 .header-text p {
-    font-size: 1.05em;
+    font-size: 0.95em;
     opacity: 0.95;
     font-weight: 400;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
@@ -91,26 +91,26 @@ body {
 /* Progress Bar Container */
 .progress-container {
     background: white;
-    padding: 25px 0;
+    padding: 12px 0;
     box-shadow: var(--shadow-sm);
     position: sticky;
     top: 0;
     z-index: 100;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 /* Step Indicators */
 .step-indicators {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     position: relative;
 }
 
 .step-indicators::before {
     content: '';
     position: absolute;
-    top: 20px;
+    top: 16px;
     left: 0;
     right: 0;
     height: 2px;
@@ -122,15 +122,15 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
     flex: 1;
     position: relative;
     z-index: 1;
 }
 
 .step-number {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: var(--bg-light);
     color: var(--text-secondary);
@@ -139,6 +139,7 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: 700;
+    font-size: 0.85em;
     transition: var(--transition);
 }
 
@@ -156,11 +157,12 @@ body {
 }
 
 .step-label {
-    font-size: 0.85em;
+    font-size: 0.7em;
     text-align: center;
     color: var(--text-secondary);
     font-weight: 500;
-    max-width: 100px;
+    max-width: 80px;
+    line-height: 1.2;
 }
 
 .step-indicator.active .step-label {
@@ -174,11 +176,11 @@ body {
 
 /* Progress Bar */
 .progress-bar-wrapper {
-    height: 8px;
+    height: 5px;
     background: var(--border-color);
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 
 .progress-bar {
@@ -192,7 +194,7 @@ body {
 .progress-text {
     display: flex;
     justify-content: space-between;
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: var(--text-secondary);
 }
 
@@ -1011,36 +1013,74 @@ input[type="number"]::-webkit-outer-spin-button {
         padding: 0 15px;
     }
 
+    .form-header {
+        padding: 15px 0;
+    }
+
     .header-content {
         flex-direction: column;
         text-align: center;
-        gap: 20px;
+        gap: 12px;
     }
 
     .logo-main {
-        width: 200px;
-        height: 200px;
+        width: 250px;
+        height: 65px;
     }
 
     .header-text h1 {
-        font-size: 1.6em;
+        font-size: 1.4em;
+        margin-bottom: 4px;
     }
 
     .header-text p {
-        font-size: 0.95em;
+        font-size: 0.85em;
+    }
+
+    /* Progress - กระชับสุด ๆ บนมือถือ */
+    .progress-container {
+        padding: 8px 0;
+        margin-bottom: 10px;
+    }
+
+    .step-indicators {
+        margin-bottom: 8px;
+        gap: 10px;
+    }
+
+    .step-indicators::before {
+        top: 13px;
+    }
+
+    .step-number {
+        width: 26px;
+        height: 26px;
+        font-size: 0.75em;
+        border-width: 1.5px;
+    }
+
+    .step-label {
+        font-size: 0.65em;
+        max-width: 65px;
+        line-height: 1.1;
+    }
+
+    .progress-bar-wrapper {
+        height: 4px;
+        margin-bottom: 6px;
+    }
+
+    .progress-text {
+        font-size: 0.75em;
     }
 
     .step-indicators {
         flex-wrap: wrap;
-        gap: 15px;
     }
 
     .step-indicator {
-        flex: 0 0 calc(33.333% - 10px);
-    }
-
-    .step-label {
-        font-size: 0.75em;
+        flex: 0 0 calc(33.333% - 7px);
+        gap: 5px;
     }
 
     .form-title-section {
@@ -1074,17 +1114,64 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 @media (max-width: 480px) {
+    .form-header {
+        padding: 12px 0;
+    }
+
     .logo-main {
-        width: 75px;
-        height: 75px;
+        width: 60px;
+        height: 60px;
     }
 
     .header-text h1 {
-        font-size: 1.3em;
+        font-size: 1.2em;
+        margin-bottom: 3px;
     }
 
     .header-text p {
-        font-size: 0.85em;
+        font-size: 0.75em;
+    }
+
+    /* Progress - เล็กที่สุดบนมือถือเล็ก */
+    .progress-container {
+        padding: 6px 0;
+        margin-bottom: 8px;
+    }
+
+    .step-indicators {
+        margin-bottom: 6px;
+        gap: 8px;
+    }
+
+    .step-indicators::before {
+        top: 11px;
+        height: 1.5px;
+    }
+
+    .step-number {
+        width: 22px;
+        height: 22px;
+        font-size: 0.7em;
+        border-width: 1.5px;
+    }
+
+    .step-label {
+        font-size: 0.6em;
+        max-width: 55px;
+        line-height: 1.1;
+    }
+
+    .step-indicator {
+        gap: 4px;
+    }
+
+    .progress-bar-wrapper {
+        height: 3px;
+        margin-bottom: 5px;
+    }
+
+    .progress-text {
+        font-size: 0.7em;
     }
 
     .form-title {

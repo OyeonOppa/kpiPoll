@@ -4,14 +4,15 @@
 
 let currentStep = 1;
 const totalSteps = 5;
+let isSubmitting = false; // ป้องกันการส่งซ้ำ
 
 // จำนวนคำถามแต่ละ Step
 const questionsPerStep = {
     1: 6, // Q1-Q6
     2: 5, // Q7-Q11
     3: 3, // Q12-Q14
-    4: 7, // Questionnaire No, Gender, Age, Education, Occupation, Income, Province
-    5: 1  // PDPA
+    4: 6, // Gender, Age, Education, Occupation, Income, Province
+    5: 0  // Privacy Notice (ไม่มี required field)
 };
 
 // ========================================
@@ -90,11 +91,7 @@ function countCompletedQuestions(stepElement) {
         if (q11Checked) completed++;
     }
     
-    // Count PDPA checkbox
-    const pdpaCheckbox = stepElement.querySelector('#pdpaConsent');
-    if (pdpaCheckbox && pdpaCheckbox.checked) {
-        completed++;
-    }
+    // Step 5 ไม่มี required field แล้ว (ไม่นับ PDPA)
     
     return completed;
 }
@@ -173,19 +170,8 @@ function validateStep(stepNumber) {
         }
     }
     
-    // ตรวจสอบ PDPA
-    if (stepNumber === 5) {
-        const pdpaCheckbox = document.getElementById('pdpaConsent');
-        if (!pdpaCheckbox.checked) {
-            isValid = false;
-            if (!firstInvalidField) {
-                const group = pdpaCheckbox.closest('.form-group');
-                firstInvalidField = group;
-                group.classList.add('shake');
-                setTimeout(() => group.classList.remove('shake'), 500);
-            }
-        }
-    }
+    // Step 5 ไม่มีการ validate เพราะไม่มี checkbox แล้ว
+    // เป็นแค่การแสดงประกาศความเป็นส่วนตัวเท่านั้น
     
     // Scroll to first invalid field
     if (!isValid && firstInvalidField) {
@@ -401,8 +387,7 @@ function setupPDPAModal() {
     const pdpaModal = document.getElementById('pdpaModal');
     const closePDPAModal = document.getElementById('closePDPAModal');
     const pdpaModalOverlay = document.getElementById('pdpaModalOverlay');
-    const acceptPDPABtn = document.getElementById('acceptPDPABtn');
-    const pdpaConsent = document.getElementById('pdpaConsent');
+    const closePDPAModalFooter = document.getElementById('closePDPAModalFooter');
     
     const closeModal = () => {
         pdpaModal.classList.remove('active');
@@ -415,13 +400,8 @@ function setupPDPAModal() {
     });
     
     closePDPAModal?.addEventListener('click', closeModal);
+    closePDPAModalFooter?.addEventListener('click', closeModal);
     pdpaModalOverlay?.addEventListener('click', closeModal);
-    
-    acceptPDPABtn?.addEventListener('click', () => {
-        pdpaConsent.checked = true;
-        updateProgressBar();
-        closeModal();
-    });
     
     // Close on ESC
     document.addEventListener('keydown', (e) => {
@@ -619,10 +599,16 @@ async function getClientIP() {
 function handleSubmit(e) {
     e.preventDefault();
     
-    // Validate final step
-    if (!validateStep(5)) {
+    // ป้องกันการส่งซ้ำ
+    if (isSubmitting) {
         return;
     }
+    
+    // Step 5 ไม่มี required field แล้ว ไม่ต้อง validate
+    // แค่ส่งข้อมูลเลย
+    
+    // Set flag
+    isSubmitting = true;
     
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.classList.add('loading');
@@ -676,32 +662,64 @@ function handleSubmit(e) {
                     </p>
                 `,
                 confirmButtonColor: '#26513C',
-                confirmButtonText: 'ปิด'
+                confirmButtonText: 'ปิด',
+                allowOutsideClick: false
             }).then(() => {
-                // Reset form
+                // Reset form completely
+                const form = document.getElementById('pollForm');
                 form.reset();
+                
+                // Reset to step 1
                 currentStep = 1;
+                
+                // Remove active class from all steps
                 document.querySelectorAll('.form-step').forEach(step => {
                     step.classList.remove('active');
-                    });
-                    document.querySelector('.form-step[data-step="1"]').classList.add('active');
-                    updateStepIndicators();
-                    updateProgressBar();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
-            }
-        })
-        .catch(error => {
-            submitBtn.classList.remove('loading');
-            submitBtn.disabled = false;
-            
-            Swal.fire({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: 'ไม่สามารถส่งแบบสำรวจได้ กรุณาลองใหม่อีกครั้ง',
-                confirmButtonColor: '#e74c3c'
+                
+                // Add active class to step 1
+                document.querySelector('.form-step[data-step="1"]').classList.add('active');
+                
+                // Update UI
+                updateStepIndicators();
+                updateProgressBar();
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Clear any conditional fields
+                document.getElementById('q5_other_group').style.display = 'none';
+                document.getElementById('q6_other_group').style.display = 'none';
+                document.getElementById('q11_other_group').style.display = 'none';
+                
+                // Re-enable all Q11 checkboxes
+                document.querySelectorAll('[name="q11[]"]').forEach(cb => {
+                    cb.disabled = false;
+                    cb.checked = false;
+                });
+                
+                // Reset flag
+                isSubmitting = false;
             });
+        } else {
+            // Reset flag if not success
+            isSubmitting = false;
+        }
+    })
+    .catch(error => {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+        
+        // Reset flag on error
+        isSubmitting = false;
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ไม่สามารถส่งแบบสำรวจได้ กรุณาลองใหม่อีกครั้ง',
+            confirmButtonColor: '#e74c3c'
         });
+    });
 }
 
 // ========================================
@@ -766,3 +784,22 @@ function init() {
 
 // Run on DOM ready
 document.addEventListener('DOMContentLoaded', init);
+
+// ========================================
+// PDPA Modal Controls
+// ========================================
+
+// ปิดโมดัล — ปุ่ม X (บนขวา)
+document.getElementById('closePDPAModal')?.addEventListener('click', function () {
+    document.getElementById('pdpaModal').classList.remove('active');
+});
+
+// ปิดโมดัล — กดปุ่มปิดด้านล่าง
+document.getElementById('closePDPAModalFooter')?.addEventListener('click', function () {
+    document.getElementById('pdpaModal').classList.remove('active');
+});
+
+// ปิดโมดัล — คลิกพื้นที่นอกกรอบ
+document.getElementById('pdpaModalOverlay')?.addEventListener('click', function () {
+    document.getElementById('pdpaModal').classList.remove('active');
+});
